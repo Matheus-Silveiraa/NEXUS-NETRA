@@ -1,0 +1,8 @@
+{
+            "ID": 1,
+            "Nome": "Dispositivo de teste",
+            "Tipo": "roteador",
+            "IP": "xxx.xxx.xxx.xxx",
+            "MAC": "xxxxxxxxxxxxx",
+            "Local": ""
+        },
