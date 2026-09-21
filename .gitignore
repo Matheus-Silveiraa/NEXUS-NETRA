@@ -1,3 +1,4 @@
 config/devices.json
 network/ping_test_output.txt
 network/output.txt
+.gitignore
