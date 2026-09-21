@@ -243,20 +243,20 @@ Futuramente, o projeto poderá utilizar:
 
 ### V1 — Diagnóstico
 
-* [ ] Cadastro via JSON
+* [x] Cadastro via JSON
 * [ ] Dashboard
 * [ ] Status dos dispositivos
 * [ ] Página individual
-* [ ] Ping
-* [ ] Latência
-* [ ] Perda de pacotes
+* [x] Ping
+* [x] Latência
+* [x] Perda de pacotes
 * [ ] Teste de gateway
 * [ ] Teste entre dispositivos
 * [ ] Teste de portas
 * [ ] Motor de diagnóstico
 * [ ] Possíveis causas
 * [ ] Relatórios
-* [ ] Salvamento dos resultados
+* [x] Salvamento dos resultados
 
 ### V2 — Histórico
 
