@@ -1,8 +1,12 @@
 {
+    "dispositivos": [
+        {    
             "ID": 1,
             "Nome": "Dispositivo de teste",
             "Tipo": "roteador",
-            "IP": "xxx.xxx.xxx.xxx",
-            "MAC": "xxxxxxxxxxxxx",
+            "IP": "xxxxxxxxxx",
+            "MAC": "xxxxxxxxxxxx",
             "Local": ""
-        },
+        }
+    ]
+}
