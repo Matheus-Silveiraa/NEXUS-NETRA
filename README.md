@@ -112,12 +112,12 @@ Exemplo:
 {
     "dispositivos": [
         {
-            "nome": "AP Coordenação",
+            "nome": "AP Exemplo",
             "tipo": "access_point",
-            "ip": "172.16.0.10",
+            "ip": "xxx.xxx.x.x",
             "mac": "XX:XX:XX:XX:XX:XX",
-            "local": "Coordenação",
-            "gateway": "172.16.0.1"
+            "local": "Exemplo",
+            "gateway": "xxx.xxx.x.x"
         }
     ]
 }
