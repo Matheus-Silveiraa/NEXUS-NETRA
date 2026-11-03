@@ -1,0 +1,12 @@
+
+Disparando 192.168.0.1 com 32 bytes de dados:
+Resposta de 192.168.0.1: bytes=32 tempo=6ms TTL=64
+Resposta de 192.168.0.1: bytes=32 tempo=6ms TTL=64
+Resposta de 192.168.0.1: bytes=32 tempo=7ms TTL=64
+Resposta de 192.168.0.1: bytes=32 tempo=3ms TTL=64
+
+Estat¡sticas do Ping para 192.168.0.1:
+    Pacotes: Enviados = 4, Recebidos = 4, Perdidos = 0 (0% de
+             perda),
+Aproximar um n£mero redondo de vezes em milissegundos:
+    M¡nimo = 3ms, M ximo = 7ms, M‚dia = 5ms

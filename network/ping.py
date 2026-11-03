@@ -28,95 +28,48 @@ def check_host(host):
         shutil.copy2(arquivo_original, caminho_destino)
         print(f"Backups feitos: {caminho_destino}")
 
-        #escreve output no arquivo de texto para analise
-        with open("network/output.txt", "w", encoding="utf-8") as arquivo:
-            subprocess.run(comando, stdout=arquivo, text=True)
-        
-            #verifica no output qual foi a saida, se o ping foi bem sucedido ou não
-            dispositivo = 0
-            with open("network/output.txt", "r", encoding="cp850") as arquivo:
-                conteudo = arquivo.read()
-        
-            if "inacessível".lower() in conteudo.lower():
-                dispositivo = dispositivo + 1
-                print("HOST DOWN")
-            elif "Esgotado".lower() in conteudo.lower():
-                dispositivo = dispositivo + 1
-                print("HOST DOWN")
-            elif re.search(r"[a-zA-Z]", host):
-                print("invalido")
-            else:
-                dispositivo = 0
-                print("HOST UP")
-        
-            #testa a latencia do host
-            latencia = "Mínimo"
-            tempo_latencia = None
-            with open("network/output.txt", "r", encoding="cp850") as pingt:
-                for linha in pingt:
-                    if latencia.lower() in linha.lower():
-                        tempo_latencia = linha.strip()
-                        break
-            if tempo_latencia:
-                print(tempo_latencia)
-        
-            # exibe os pacotes quantos foram enviados, quantos foram recebidos, e quantos foram perdidos
-            if dispositivo == 0:
-                with open("network/output.txt", "r", encoding="cp850") as pingp:
-                    texto_capturado = None
-                    conteudo = pingp.read()
-                    resultado = re.search(r'(Pacotes:.*?\))', conteudo, re.DOTALL)
-                    if resultado:
-                        texto_capturado = resultado.group(1)
-                if texto_capturado:
-                    texto_limpo = " ".join(texto_capturado.split())
-                    print(texto_limpo)
-                else:
-                    print("")
-    else:
-        #escreve output no arquivo de texto para analise
-        with open("network/output.txt", "w", encoding="utf-8") as arquivo:
-            subprocess.run(comando, stdout=arquivo, text=True)
-
+    #escreve output no arquivo de texto para analise
+    with open("network/output.txt", "w", encoding="utf-8") as arquivo:
+        subprocess.run(comando, stdout=arquivo, text=True)
+            
         #verifica no output qual foi a saida, se o ping foi bem sucedido ou não
         dispositivo = 0
-        with open("network/output.txt", "r", encoding="cp850") as arquivo:
-            conteudo = arquivo.read()
-
-            if "inacessível".lower() in conteudo.lower():
-                dispositivo = dispositivo + 1
-                print("HOST DOWN")
-            elif "Esgotado".lower() in conteudo.lower():
-                dispositivo = dispositivo + 1
-                print("HOST DOWN")
-            elif re.search(r"[a-zA-Z]", host):
-                print("invalido")
-            else:
-                dispositivo = 0
-                print("HOST UP")
-
+    with open("network/output.txt", "r", encoding="cp850") as arquivo:
+        conteudo = arquivo.read()
+            
         #testa a latencia do host
         latencia = "Mínimo"
         tempo_latencia = None
-        with open("network/output.txt", "r", encoding="cp850") as pingt:
-            for linha in pingt:
-                if latencia.lower() in linha.lower():
-                    tempo_latencia = linha.strip()
-                    break
-        if tempo_latencia:
-            print(tempo_latencia)
-
-        # exibe os pacotes quantos foram enviados, quantos foram recebidos, e quantos foram perdidos
-        if dispositivo == 0:
-            with open("network/output.txt", "r", encoding="cp850") as pingp:
-                texto_capturado = None
-                conteudo = pingp.read()
-                resultado = re.search(r'(Pacotes:.*?\))', conteudo, re.DOTALL)
-                if resultado:
-                    texto_capturado = resultado.group(1)
-            if texto_capturado:
-                texto_limpo = " ".join(texto_capturado.split())
-                print(texto_limpo)
+    with open("network/output.txt", "r", encoding="cp850") as pingt:
+        if "inacessível".lower() in conteudo.lower():
+            dispositivo = dispositivo + 1
+            print("HOST DOWN")
+        elif "Esgotado".lower() in conteudo.lower():
+            dispositivo = dispositivo + 1
+            print("HOST DOWN")
+        elif re.search(r"[a-zA-Z]", host):
+            print("invalido")
+        else:
+            dispositivo = 0
+            print("HOST UP")
+        for linha in pingt:
+            if latencia.lower() in linha.lower():
+                tempo_latencia = linha.strip()
+                break
+    if tempo_latencia:
+        print(tempo_latencia)
+            
+    # exibe os pacotes quantos foram enviados, quantos foram recebidos, e quantos foram perdidos
+    if dispositivo == 0:
+        with open("network/output.txt", "r", encoding="cp850") as pingp:
+            texto_capturado = None
+            conteudo = pingp.read()
+            resultado = re.search(r'(Pacotes:.*?\))', conteudo, re.DOTALL)
+            if resultado:
+                texto_capturado = resultado.group(1)
+        if texto_capturado:
+            texto_limpo = " ".join(texto_capturado.split())
+            print(texto_limpo)
         else:
             print("")
 
@@ -181,4 +134,4 @@ def ping_test(host):
 
     input("pressione ENTER para prosseguir....")
 
-check_host("172.16.0.1")
+check_host("falafi")
