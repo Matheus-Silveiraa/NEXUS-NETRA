@@ -1,318 +1,173 @@
-# NEXUS NETRA
+# NETRA
 
 **Network Tools & Response Assistant**
 
-O **NETRA** é uma ferramenta de diagnóstico e monitoramento de dispositivos de rede desenvolvida como parte do ecossistema **NEXUS Tools**.
+O **NETRA** é uma ferramenta de diagnóstico de conectividade de rede desenvolvida em Python. O projeto começou como uma aplicação de terminal para testar dispositivos cadastrados e analisar respostas ICMP/Ping.
 
-O objetivo do NETRA é auxiliar na identificação de problemas de conectividade e infraestrutura de rede através da execução de testes objetivos e da análise dos resultados obtidos.
+O objetivo é evoluir de simples verificações de disponibilidade para diagnósticos que apresentem resultados, evidências e possíveis causas de problemas de infraestrutura.
 
-A ferramenta foi projetada inicialmente para utilização em ambientes de rede controlados, começando pelo monitoramento de roteadores e access points, mas com arquitetura preparada para futuramente trabalhar com servidores, switches, DVRs e outros dispositivos.
+## Estado atual — V1.0
 
-## Objetivo
+Atualmente, o NETRA possui:
 
-O NETRA não deve simplesmente informar que um dispositivo está "offline".
+- Cadastro de dispositivos por arquivo JSON.
+- Menu de terminal com listagem dinâmica dos dispositivos cadastrados.
+- Consulta das informações de um dispositivo selecionado.
+- Verificação de conectividade por ICMP/Ping.
+- Exibição da latência informada pelo comando Ping.
+- Exibição das estatísticas de pacotes quando disponíveis.
+- Teste prolongado de Ping com duração definida pelo usuário.
+- Análise das respostas registradas durante o teste prolongado.
+- Salvamento local dos outputs utilizados na análise.
+- Backup do output anterior do teste de conectividade.
 
-A ferramenta deve reunir informações suficientes para responder:
+O projeto ainda está em desenvolvimento. A interpretação de perda parcial de pacotes, a padronização dos resultados e o tratamento de algumas entradas e situações excepcionais estão em processo de correção.
 
-> **Qual é o possível problema e quais evidências sustentam essa hipótese?**
+## Requisitos
 
-Para isso, o sistema executa diferentes testes de conectividade e apresenta seus resultados de forma organizada.
+- Windows.
+- Python 3 instalado e disponível no PATH.
+- Acesso ao terminal.
+- Permissão para executar o comando `ping` do Windows.
 
-## Principais funcionalidades
+A implementação atual utiliza recursos específicos do Windows, como `ping -n`, `ping /t` e `taskkill`. Portanto, ainda não é compatível com Linux ou macOS.
 
-A primeira versão deverá possuir:
+## Como executar
 
-* Cadastro de dispositivos através de arquivo JSON
-* Dashboard web de monitoramento
-* Visualização do status dos dispositivos
-* Página individual para cada dispositivo
-* Teste de conectividade através de ICMP/Ping
-* Medição de latência
-* Cálculo de perda de pacotes
-* Teste de gateway
-* Teste de conectividade entre dispositivos
-* Teste de portas TCP previamente configuradas
-* Diagnóstico baseado em regras
-* Identificação de possíveis causas
-* Registro das evidências encontradas
-* Geração de relatórios técnicos
-* Salvamento dos resultados dos diagnósticos
-* Registro de data e hora dos testes
+1. Clone o repositório:
 
-## Arquitetura
+   ```powershell
+   git clone https://github.com/Matheus-Silveiraa/NEXUS-NETRA.git
+   cd NEXUS-NETRA
+   ```
 
-O projeto será dividido em módulos para facilitar manutenção, testes e futuras expansões.
+2. Crie o arquivo local de configuração copiando o exemplo:
 
-```text
-netra/
-│
-├── app.py
-│
-├── config/
-│   └── devices.json
-│
-├── core/
-│   ├── config.py
-│   ├── models.py
-│   └── utils.py
-│
-├── network/
-│   ├── ping.py
-│   ├── gateway.py
-│   ├── ports.py
-│   └── connectivity.py
-│
-├── diagnostics/
-│   └── engine.py
-│
-├── reports/
-│   └── generator.py
-│
-├── web/
-│   ├── routes.py
-│   │
-│   ├── templates/
-│   │
-│   └── static/
-│       ├── css/
-│       └── js/
-│
-├── data/
-│   └── reports/
-│
-├── tests/
-│
-├── requirements.txt
-└── README.md
-```
+   ```powershell
+   copy config\devices_exemple.json config\devices.json
+   ```
 
-A estrutura poderá ser modificada durante o desenvolvimento conforme novas necessidades surgirem.
+3. Edite `config/devices.json` e cadastre os dispositivos que deseja testar. Utilize endereços IP da sua própria rede e tenha autorização para realizar os testes.
 
-## Cadastro dos dispositivos
+4. Execute a aplicação a partir da pasta raiz do projeto:
 
-Os dispositivos não serão armazenados diretamente no código-fonte.
+   ```powershell
+   python main.py
+   ```
 
-O NETRA utilizará um arquivo JSON externo para armazenar as informações dos equipamentos.
+O arquivo `config/devices.json` é local e está incluído no `.gitignore`. Não publique configurações que contenham endereços, nomes, MAC addresses ou outras informações da sua infraestrutura.
 
-Cada dispositivo poderá possuir informações como:
+## Cadastro de dispositivos
 
-* Nome
-* Tipo
-* Endereço IP
-* MAC Address
-* Localização
-* Gateway
-* Descrição
-* Status
-* Data/hora do último teste
+O cadastro é feito no arquivo `config/devices.json`, dentro da chave `dispositivos`.
 
-Exemplo:
+O formato atual exige os campos com esta grafia:
+
+- `ID`: identificador numérico utilizado pelo menu.
+- `Nome`: nome de exibição do dispositivo.
+- `Tipo`: tipo do equipamento.
+- `IP`: endereço IPv4 utilizado nos testes.
+- `MAC`: endereço MAC informativo.
+- `Local`: localização ou identificação do ambiente.
+
+Exemplo fictício:
 
 ```json
 {
     "dispositivos": [
         {
-            "nome": "AP Exemplo",
-            "tipo": "access_point",
-            "ip": "xxx.xxx.x.x",
-            "mac": "XX:XX:XX:XX:XX:XX",
-            "local": "Exemplo",
-            "gateway": "xxx.xxx.x.x"
+            "ID": 1,
+            "Nome": "Servidor de exemplo",
+            "Tipo": "servidor",
+            "IP": "192.0.2.10",
+            "MAC": "02:00:00:00:00:10",
+            "Local": "Laboratório de testes"
+        },
+        {
+            "ID": 2,
+            "Nome": "Access Point de exemplo",
+            "Tipo": "access_point",
+            "IP": "198.51.100.20",
+            "MAC": "02:00:00:00:00:20",
+            "Local": "Sala de testes"
         }
     ]
 }
 ```
 
-O arquivo deverá ser carregado automaticamente pela aplicação.
+Os endereços IP do exemplo pertencem a faixas reservadas para documentação e não representam equipamentos reais. Substitua-os por endereços válidos da rede autorizada em que o NETRA será utilizado.
 
-Alterações nos dispositivos deverão ser realizadas no arquivo de configuração, sem necessidade de modificar o código da aplicação.
+O campo `Gateway` ainda não faz parte do formato utilizado pelo código atual. O teste de gateway está planejado para uma versão futura.
 
-## Diagnóstico
+## Arquivos gerados
 
-O NETRA utilizará regras para interpretar os resultados dos testes.
+Durante a execução, o NETRA utiliza arquivos locais para armazenar as saídas dos comandos:
 
-Exemplo:
+- `network/output.txt`: saída do teste de conectividade executado por `check_host`.
+- `network/ping_test_output.txt`: saída do teste prolongado de Ping.
+- `backups/`: cópias anteriores de `network/output.txt`.
 
-```text
-Dispositivo responde ao Ping
-        │
-        └──► Dispositivo provavelmente acessível
+Esses arquivos podem conter informações da rede utilizada nos testes e, por isso, são ignorados pelo Git.
 
-
-Dispositivo não responde
-Gateway responde
-        │
-        └──► Investigar dispositivo,
-             cabo, porta do switch
-             ou configuração
-
-
-Dispositivo responde ao Ping
-Porta específica não responde
-        │
-        └──► Serviço pode estar
-             indisponível ou bloqueado
-```
-
-O sistema não deverá apresentar uma hipótese como certeza quando os testes não forem suficientes para comprovar a causa.
-
-Os resultados deverão ser apresentados como **possíveis causas**, acompanhados das evidências encontradas.
-
-## Relatórios
-
-Após a execução de um diagnóstico, o NETRA poderá gerar um relatório técnico contendo:
-
-* Data e hora
-* Dispositivo analisado
-* IP
-* MAC Address
-* Localização
-* Status
-* Testes executados
-* Resultados
-* Latências
-* Perda de pacotes
-* Portas testadas
-* Conectividade com outros dispositivos
-* Possíveis causas
-* Evidências
-* Observações
-
-Inicialmente, os relatórios poderão ser armazenados em formatos como TXT e JSON.
-
-## Interface
-
-A aplicação possuirá uma interface web acessível através da rede local.
-
-O dashboard deverá apresentar os dispositivos cadastrados em cards, mostrando informações essenciais e seu estado atual.
-
-Estados previstos:
+## Estrutura atual
 
 ```text
-🟢 ONLINE
-🟡 PROBLEMA / TESTE
-⚫ OFFLINE
+NEXUS-NETRA/
+├── config/
+│   └── devices_exemple.json
+├── core/
+│   └── config.py
+├── network/
+│   └── ping.py
+├── main.py
+├── .gitignore
+└── README.md
 ```
 
-A interface deverá priorizar simplicidade, clareza e facilidade de interpretação.
-
-## Segurança
-
-O NETRA será desenvolvido para utilização em ambientes controlados.
-
-A V1 não deverá:
-
-* Executar scans indiscriminados da rede
-* Realizar testes agressivos
-* Executar ações destrutivas
-* Alterar configurações de equipamentos
-* Armazenar credenciais de dispositivos
-* Executar ações administrativas automaticamente
-
-Os testes deverão possuir finalidade exclusivamente diagnóstica.
-
-## Tecnologias
-
-A primeira versão utilizará:
-
-**Backend**
-
-* Python
-* Flask ou FastAPI
-
-**Frontend**
-
-* HTML
-* CSS
-* JavaScript
-
-**Dados**
-
-* JSON
-
-Futuramente, o projeto poderá utilizar:
-
-* SQLite
-* Banco de dados
-* Gráficos
-* APIs
-* Sistema de autenticação
-* Monitoramento contínuo
+Arquivos de configuração e outputs locais são criados durante a utilização e não são versionados. A estrutura poderá mudar conforme novos módulos forem implementados.
 
 ## Roadmap
 
-### V1 — Diagnóstico
+### Próximas correções
 
-* [x] Cadastro via JSON
-* [ ] Dashboard
-* [ ] Status dos dispositivos
-* [ ] Página individual
-* [x] Ping
-* [x] Latência
-* [x] Perda de pacotes
-* [ ] Teste de gateway
-* [ ] Teste entre dispositivos
-* [ ] Teste de portas
-* [ ] Motor de diagnóstico
-* [ ] Possíveis causas
-* [ ] Relatórios
-* [x] Salvamento dos resultados
+- [ ] Diferenciar host indisponível de perda parcial de pacotes.
+- [ ] Reduzir a dependência do idioma da saída do Windows.
+- [ ] Fazer `check_host` retornar um resultado estruturado.
+- [ ] Corrigir a contagem de respostas e a leitura de latências no `ping_test`.
+- [ ] Validar a duração informada pelo usuário.
+- [ ] Garantir o encerramento do processo de Ping em caso de interrupção.
+- [ ] Tratar entradas inválidas no menu.
 
-### V2 — Histórico
+### Funcionalidades planejadas
 
-* [ ] SQLite
-* [ ] Histórico completo
-* [ ] Gráficos de latência
-* [ ] Gráficos de disponibilidade
-* [ ] Comparação entre diagnósticos
-* [ ] Exportação PDF
-* [ ] Dashboard avançado
+- [ ] Menu de seleção de testes.
+- [ ] Teste de gateway.
+- [ ] Teste de conectividade entre dispositivos.
+- [ ] Teste de portas TCP configuradas.
+- [ ] Motor de diagnóstico baseado em regras.
+- [ ] Identificação de possíveis causas e registro de evidências.
+- [ ] Geração de relatórios técnicos.
+- [ ] Histórico de resultados com SQLite.
+- [ ] Dashboard web e monitoramento contínuo.
 
-### V3 — Descoberta e monitoramento
+## Limitações conhecidas
 
-* [ ] Descoberta de dispositivos
-* [ ] ARP
-* [ ] SNMP
-* [ ] Identificação automática
-* [ ] Monitoramento contínuo
-* [ ] Alertas
-
-### V4 — Acesso
-
-* [ ] Autenticação
-* [ ] Acesso remoto seguro
-* [ ] Notificações
-* [ ] Aplicativo mobile
-
-### V5+ — Automação
-
-* [ ] Automação de diagnóstico
-* [ ] Análise de padrões
-* [ ] Integração com infraestrutura
-* [ ] Recomendações avançadas
-* [ ] Monitoramento centralizado
-* [ ] Múltiplos agentes
+- A versão atual funciona somente no Windows.
+- Os testes são direcionados a dispositivos cadastrados por endereço IP.
+- A interpretação de algumas mensagens do Ping ainda depende do idioma da saída do Windows.
+- O diagnóstico ainda não identifica automaticamente a causa de uma falha; essa capacidade faz parte do desenvolvimento futuro.
 
 ## Filosofia
 
-O NETRA não foi projetado para ser apenas um "ping com interface".
+O NETRA não foi projetado para ser apenas um programa que informa se um endereço responde ao Ping.
 
-Cada diagnóstico deve tentar responder:
+Cada diagnóstico deverá ajudar a responder:
 
 ```text
 O que foi testado?
-
 Qual foi o resultado?
-
 O que esse resultado significa?
-
-Quais hipóteses podem ser levantadas?
+Quais hipóteses são sustentadas pelas evidências?
 ```
 
-O objetivo é transformar informações técnicas da rede em evidências que possam auxiliar na investigação de problemas reais de infraestrutura.
-
----
-
-**NEXUS Tools**
-
-NETRA — Network Diagnostic & Monitoring Tool
+O objetivo é transformar resultados técnicos de conectividade em informações úteis para investigar problemas reais de infraestrutura de rede.
